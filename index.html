@@ -3,173 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>字字乐园 App</title>
+<title>字字乐园｜笔顺练习</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #f5f7ff;
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f5f7ff;
 }
 
-/* 顶部 */
-header {
-  background: linear-gradient(135deg,#ffcc66,#ff9966);
-  padding: 20px;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
-  color: white;
+header{
+  background:linear-gradient(135deg,#ffcc66,#ff9966);
+  color:white;
+  text-align:center;
+  padding:18px;
+  font-size:20px;
+  font-weight:bold;
 }
 
-/* 星星 */
-#scoreBox {
-  text-align: center;
-  margin: 10px;
-  font-size: 18px;
+#info{
+  text-align:center;
+  margin:10px;
+  font-size:16px;
 }
 
-/* 卡片 */
-.card {
-  background: white;
-  margin: 15px;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  text-align: center;
+.card{
+  background:white;
+  margin:15px;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  text-align:center;
 }
 
-/* 汉字按钮 */
-.word {
-  font-size: 45px;
-  margin: 15px;
-  display: inline-block;
-  padding: 20px;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  cursor: pointer;
+/* 汉字显示 */
+.char{
+  font-size:120px;
+  margin:20px;
+  color:#333;
+  position:relative;
 }
 
-/* 底部导航 */
-.nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  background: white;
-  border-top: 1px solid #ddd;
+/* 笔画动画层 */
+.stroke{
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  font-size:120px;
+  color:rgba(255,153,102,0.3);
+  animation:write 2s linear forwards;
 }
 
-.nav div {
-  flex: 1;
-  padding: 12px;
-  text-align: center;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-/* 页面 */
-.page {
-  display: none;
-  padding-bottom: 70px;
-}
-
-.active {
-  display: block;
+/* 写字动画 */
+@keyframes write{
+  0%{clip-path: inset(0 100% 0 0);}
+  100%{clip-path: inset(0 0 0 0);}
 }
 
 /* 按钮 */
-button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 12px;
-  background: #ff9966;
-  color: white;
-  font-size: 16px;
-  margin: 5px;
+button{
+  padding:12px 18px;
+  margin:8px;
+  border:none;
+  border-radius:12px;
+  background:#ff9966;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header>🌈 字字乐园 App</header>
+<header>✍️ 笔顺练习系统</header>
 
-<div id="scoreBox">⭐ 星星：<span id="score">0</span></div>
-
-<!-- 首页 -->
-<div id="home" class="page active">
-  <div class="card">
-    <h3>📚 学习汉字</h3>
-    <div class="word" onclick="speak('猫')">猫</div>
-    <div class="word" onclick="speak('狗')">狗</div>
-    <div class="word" onclick="speak('鸟')">鸟</div>
-  </div>
+<div id="info">
+📚 当前汉字：<span id="name">猫</span>
 </div>
 
-<!-- 游戏页 -->
-<div id="game" class="page">
-  <div class="card">
-    <h3>🎮 选择正确汉字：猫</h3>
-    <button onclick="answer(true)">猫</button>
-    <button onclick="answer(false)">狗</button>
-    <button onclick="answer(false)">鸟</button>
-  </div>
-</div>
+<div class="card">
 
-<!-- 设置页 -->
-<div id="me" class="page">
-  <div class="card">
-    <h3>👧 学习记录</h3>
-    <p>你的星星会一直保存哦 ⭐</p>
-    <button onclick="reset()">重置星星</button>
+  <div class="char">
+    <div id="stroke" class="stroke">猫</div>
+    <div id="char">猫</div>
   </div>
-</div>
 
-<!-- 底部导航 -->
-<div class="nav">
-  <div onclick="show('home')">🏠 学习</div>
-  <div onclick="show('game')">🎮 游戏</div>
-  <div onclick="show('me')">👤 我的</div>
+  <button onclick="play()">▶ 播放写字动画</button>
+  <button onclick="next()">下一个字 ➜</button>
+
 </div>
 
 <script>
-let score = localStorage.getItem("score") || 0;
-document.getElementById("score").innerText = score;
 
-// 发音
-function speak(word){
-  let msg = new SpeechSynthesisUtterance(word);
+const chars = ["猫","狗","鸟","人","大","小","中"];
+
+let index = 0;
+
+/* 初始化 */
+function load(){
+  document.getElementById("char").innerText = chars[index];
+  document.getElementById("stroke").innerText = chars[index];
+  document.getElementById("name").innerText = chars[index];
+}
+
+/* 🔊 语音 */
+function play(){
+  let msg = new SpeechSynthesisUtterance("写" + chars[index]);
   msg.lang = "zh-CN";
   speechSynthesis.speak(msg);
+
+  // 重新触发动画
+  let el = document.getElementById("stroke");
+  el.style.animation = "none";
+  void el.offsetWidth; 
+  el.style.animation = "write 2s linear forwards";
 }
 
-// 答题
-function answer(correct){
-  if(correct){
-    alert("✔️ 答对了！");
-    score++;
-    localStorage.setItem("score", score);
-    document.getElementById("score").innerText = score;
-  }else{
-    alert("❌ 再试试！");
+/* 下一个字 */
+function next(){
+  index++;
+  if(index >= chars.length){
+    index = 0;
+    alert("🎉 完成一轮练习！");
   }
+  load();
 }
 
-// 切换页面（App感觉核心）
-function show(page){
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(page).classList.add("active");
-}
+load();
 
-// 重置
-function reset(){
-  score = 0;
-  localStorage.setItem("score", score);
-  document.getElementById("score").innerText = score;
-  alert("已重置 ⭐");
-}
 </script>
 
 </body>
