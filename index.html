@@ -3,296 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>字字乐园</title>
-
-<link rel="manifest" href="manifest.json">
+<title>字字乐园 PRO</title>
 
 <style>
 body{
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(#fff7e6,#e6f0ff);
-  overflow:hidden;
+  font-family:"Arial";
+  background:#fff8ee;
 }
 
 /* 顶部 */
 header{
-  text-align:center;
-  padding:12px;
   background:linear-gradient(135deg,#ffb6c1,#ffd580);
   color:white;
-  font-size:18px;
-}
-
-/* HUD */
-#hud{
   text-align:center;
-  padding:8px;
-  font-size:14px;
-}
-
-/* 世界地图 */
-.world{
-  position:relative;
-  height:85vh;
-}
-
-/* 路径动画 */
-.path{
-  position:absolute;
-  width:3px;
-  height:100%;
-  background:rgba(255,153,102,0.3);
-  left:50%;
-  animation:flow 3s infinite linear;
-}
-
-@keyframes flow{
-  0%{opacity:0.2;}
-  50%{opacity:1;}
-  100%{opacity:0.2;}
-}
-
-/* 节点 */
-.node{
-  width:110px;
-  height:110px;
-  border-radius:50%;
-  position:absolute;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  font-size:14px;
+  padding:18px;
+  font-size:22px;
   font-weight:bold;
-  cursor:pointer;
-  box-shadow:0 5px 12px rgba(0,0,0,0.2);
-  transition:0.3s;
 }
 
-.node:active{
-  transform:scale(0.9);
+/* 星星 */
+#info{
+  text-align:center;
+  padding:10px;
+  font-size:15px;
 }
 
-/* 状态 */
-.open{
-  background:linear-gradient(135deg,#ffcc66,#ff9966);
-  color:white;
-  animation:pulse 2s infinite;
-}
+/* 页面 */
+.page{display:none;padding:12px;}
+.active{display:block;}
 
-.locked{
-  background:#ccc;
-  color:#777;
-}
-
-.done{
-  background:#4caf50;
-  color:white;
-}
-
-/* 动画 */
-@keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.05);}
-  100%{transform:scale(1);}
-}
-
-/* 位置（地图路线） */
-#n0{top:60%;left:10%;}
-#n1{top:30%;left:40%;}
-#n2{top:60%;left:70%;}
-
-/* 游戏页 */
-#game{
-  display:none;
-  padding:15px;
-}
-
+/* 卡片（儿童风） */
 .card{
   background:white;
-  padding:20px;
-  border-radius:20px;
+  border-radius:22px;
+  padding:18px;
+  margin:10px 0;
   text-align:center;
-  margin-top:20px;
+  box-shadow:0 5px 12px rgba(0,0,0,0.1);
 }
 
+/* 按钮（圆润儿童风） */
 button{
-  padding:10px 15px;
+  padding:10px 14px;
   margin:5px;
   border:none;
-  border-radius:12px;
-  background:#ff9966;
+  border-radius:15px;
+  background:#ff9f80;
   color:white;
+  font-size:14px;
 }
 
+/* 汉字 */
+.word{
+  font-size:45px;
+  margin:10px;
+}
+
+/* 图片 */
 img{
-  width:130px;
-  height:130px;
-  border-radius:12px;
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  border-radius:18px;
 }
 
-/* 入场动画 */
-.fadeIn{
-  animation:fade 0.5s ease;
+/* 底部导航 */
+.nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  background:white;
+  border-top:1px solid #eee;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
+.nav div{
+  flex:1;
+  text-align:center;
+  padding:10px;
+  font-size:13px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🌈 字字乐园｜学习世界</header>
+<header>🌈 字字乐园 PRO</header>
 
-<div id="hud">
+<div id="info">
 ⭐ 星星：<span id="score">0</span>
 </div>
 
-<!-- 🌍 世界地图 -->
-<div id="world" class="world">
-
-  <div class="path"></div>
-
-  <div class="node open" id="n0" onclick="enter(0)">
-    👨‍👩‍👧<br>人物
+<!-- 🏠 首页 -->
+<div id="home" class="page active">
+  <div class="card">
+    <h3>📚 学习入口</h3>
+    <button onclick="openLearn()">进入学习</button>
   </div>
 
-  <div class="node locked" id="n1" onclick="enter(1)">
-    🐾<br>动物
+  <div class="card">
+    <h3>🎮 趣味闯关</h3>
+    <button onclick="show('game1')">看图选词</button>
+    <button onclick="show('game2')">听读选词</button>
   </div>
-
-  <div class="node locked" id="n2" onclick="enter(2)">
-    🧠<br>身体
-  </div>
-
 </div>
 
-<!-- 🎮 游戏 -->
-<div id="game">
-
-  <div class="card fadeIn">
-    <h3 id="title"></h3>
+<!-- 📚 学习（范读+跟读+朗读+笔顺） -->
+<div id="learn" class="page">
+  <div class="card">
+    <div class="word" id="char">猫</div>
 
     <img id="img">
 
-    <div id="options"></div>
+    <div>
+      <button onclick="fandou()">📢 范读</button>
+      <button onclick="langdu()">🔊 朗读</button>
+      <button onclick="gendu()">👂 跟读</button>
+    </div>
 
-    <button onclick="back()">返回地图</button>
+    <div>
+      <button onclick="nextWord()">下一个</button>
+    </div>
   </div>
 
+  <div class="card">
+    <h3>✍️ 笔顺练习</h3>
+    <div id="stroke" style="font-size:70px;opacity:0.3;">猫</div>
+    <button onclick="writeAnim()">播放笔顺</button>
+  </div>
+</div>
+
+<!-- 🎮 看图选词 -->
+<div id="game1" class="page">
+  <div class="card">
+    <h3>🖼 看图选词</h3>
+    <img id="gimg">
+    <div id="gopt"></div>
+  </div>
+</div>
+
+<!-- 🎧 听读选词 -->
+<div id="game2" class="page">
+  <div class="card">
+    <h3>🔊 听读选词</h3>
+    <button onclick="playAudio()">▶ 播放</button>
+    <div id="aopt"></div>
+  </div>
 </div>
 
 <script>
 
-/* PWA注册 */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js');
-}
+let score = localStorage.getItem("score") || 0;
+document.getElementById("score").innerText = score;
 
-/* 数据 */
+/* 数据（可扩展） */
 const data=[
-  {
-    name:"人物",
-    items:[
-      {w:"爸爸",img:"https://cdn-icons-png.flaticon.com/512/2922/2922510.png"},
-      {w:"妈妈",img:"https://cdn-icons-png.flaticon.com/512/2922/2922561.png"}
-    ]
-  },
-  {
-    name:"动物",
-    items:[
-      {w:"猫",img:"https://cdn-icons-png.flaticon.com/512/616/616430.png"},
-      {w:"狗",img:"https://cdn-icons-png.flaticon.com/512/616/616408.png"}
-    ]
-  },
-  {
-    name:"身体",
-    items:[
-      {w:"头",img:"https://cdn-icons-png.flaticon.com/512/4140/4140048.png"},
-      {w:"手",img:"https://cdn-icons-png.flaticon.com/512/709/709594.png"}
-    ]
-  }
+  {w:"猫",img:"https://cdn-icons-png.flaticon.com/512/616/616430.png"},
+  {w:"狗",img:"https://cdn-icons-png.flaticon.com/512/616/616408.png"},
+  {w:"鱼",img:"https://cdn-icons-png.flaticon.com/512/616/616547.png"}
 ];
 
-let cur=0;
-let idx=0;
+let i=0;
 
-let score=localStorage.getItem("score")||0;
-document.getElementById("score").innerText=score;
-
-/* 进入关卡 */
-function enter(i){
-  cur=i;
-  idx=0;
-
-  document.getElementById("world").style.display="none";
-  document.getElementById("game").style.display="block";
-
-  load();
+/* 页面切换 */
+function show(p){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  document.getElementById(p).classList.add("active");
 }
 
-/* 加载 */
-function load(){
-  let q=data[cur].items[idx];
+/* 进入学习 */
+function openLearn(){
+  show('learn');
+  loadLearn();
+}
 
-  document.getElementById("title").innerText=data[cur].name;
-  document.getElementById("img").src=q.img;
+/* 学习 */
+function loadLearn(){
+  document.getElementById("char").innerText=data[i].w;
+  document.getElementById("img").src=data[i].img;
+}
+
+/* 范读 */
+function fandou(){
+  let msg=new SpeechSynthesisUtterance("请跟我读：" + data[i].w);
+  msg.lang="zh-CN";
+  speechSynthesis.speak(msg);
+}
+
+/* 朗读 */
+function langdu(){
+  let msg=new SpeechSynthesisUtterance(data[i].w);
+  msg.lang="zh-CN";
+  speechSynthesis.speak(msg);
+}
+
+/* 跟读 */
+function gendu(){
+  let msg=new SpeechSynthesisUtterance("你来读：" + data[i].w);
+  msg.lang="zh-CN";
+  speechSynthesis.speak(msg);
+}
+
+/* 下一个 */
+function nextWord(){
+  i++;
+  if(i>=data.length) i=0;
+  loadLearn();
+}
+
+/* ✍️ 笔顺动画（简化版） */
+function writeAnim(){
+  let el=document.getElementById("stroke");
+  el.innerText=data[i].w;
+  el.style.transition="0.3s";
+  el.style.opacity="1";
+  setTimeout(()=>el.style.opacity="0.3",1000);
+}
+
+/* 🖼 看图选词 */
+function loadGame1(){
+  let q=data[Math.floor(Math.random()*data.length)];
+  document.getElementById("gimg").src=q.img;
 
   let opt=[q.w,"苹果","车","树"];
 
   let html="";
   opt.forEach(o=>{
-    html+=`<button onclick="check('${o}')">${o}</button>`;
+    html+=`<button onclick="checkGame1('${o}','${q.w}')">${o}</button>`;
   });
 
-  document.getElementById("options").innerHTML=html;
+  document.getElementById("gopt").innerHTML=html;
+}
+loadGame1();
+
+function checkGame1(a,ans){
+  if(a===ans){
+    alert("✔️ 正确");
+    add();
+  }else alert("❌");
+  loadGame1();
 }
 
-/* 答题 */
-function check(a){
-  let q=data[cur].items[idx];
+/* 🎧 听读选词 */
+let audioWord=data[0].w;
 
-  if(a===q.w){
-    score++;
-    localStorage.setItem("score",score);
-    document.getElementById("score").innerText=score;
+function playAudio(){
+  let msg=new SpeechSynthesisUtterance(audioWord);
+  msg.lang="zh-CN";
+  speechSynthesis.speak(msg);
 
-    idx++;
+  let opt=[audioWord,"猫","狗","鱼"];
+  let html="";
+  opt.forEach(o=>{
+    html+=`<button onclick="checkAudio('${o}')">${o}</button>`;
+  });
 
-    if(idx>=data[cur].items.length){
-      unlock();
-      alert("🎉 通关！");
-      back();
-      return;
-    }
-  }
-
-  load();
+  document.getElementById("aopt").innerHTML=html;
 }
 
-/* 解锁 */
-function unlock(){
-  let node=document.getElementById("n"+cur);
-  node.classList.remove("open");
-  node.classList.add("done");
-
-  let next=document.getElementById("n"+(cur+1));
-  if(next){
-    next.classList.remove("locked");
-    next.classList.add("open");
-  }
+function checkAudio(a){
+  if(a===audioWord){
+    alert("✔️ 正确");
+    add();
+  }else alert("❌");
+  audioWord=data[Math.floor(Math.random()*data.length)].w;
 }
 
-/* 返回 */
-function back(){
-  document.getElementById("game").style.display="none";
-  document.getElementById("world").style.display="block";
+/* ⭐ 加分 */
+function add(){
+  score++;
+  localStorage.setItem("score",score);
+  document.getElementById("score").innerText=score;
 }
 
+</script>
+
+<!-- 自动初始化 -->
+<script>
+loadGame1();
 </script>
 
 </body>
