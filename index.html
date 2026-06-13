@@ -1,17 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>字字乐园</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字字乐园 App</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f5f7ff;
+}
+
+/* 顶部 */
+header {
+  background: linear-gradient(135deg,#ffcc66,#ff9966);
+  padding: 20px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+}
+
+/* 星星 */
+#scoreBox {
+  text-align: center;
+  margin: 10px;
+  font-size: 18px;
+}
+
+/* 卡片 */
+.card {
+  background: white;
+  margin: 15px;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* 汉字按钮 */
+.word {
+  font-size: 45px;
+  margin: 15px;
+  display: inline-block;
+  padding: 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+/* 底部导航 */
+.nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  background: white;
+  border-top: 1px solid #ddd;
+}
+
+.nav div {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 页面 */
+.page {
+  display: none;
+  padding-bottom: 70px;
+}
+
+.active {
+  display: block;
+}
+
+/* 按钮 */
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #ff9966;
+  color: white;
+  font-size: 16px;
+  margin: 5px;
+}
+</style>
 </head>
 
 <body>
 
-<h1>🌈 字字乐园</h1>
+<header>🌈 字字乐园 App</header>
 
-<p>欢迎来到识字世界！</p>
+<div id="scoreBox">⭐ 星星：<span id="score">0</span></div>
 
-<button>开始学习</button>
+<!-- 首页 -->
+<div id="home" class="page active">
+  <div class="card">
+    <h3>📚 学习汉字</h3>
+    <div class="word" onclick="speak('猫')">猫</div>
+    <div class="word" onclick="speak('狗')">狗</div>
+    <div class="word" onclick="speak('鸟')">鸟</div>
+  </div>
+</div>
+
+<!-- 游戏页 -->
+<div id="game" class="page">
+  <div class="card">
+    <h3>🎮 选择正确汉字：猫</h3>
+    <button onclick="answer(true)">猫</button>
+    <button onclick="answer(false)">狗</button>
+    <button onclick="answer(false)">鸟</button>
+  </div>
+</div>
+
+<!-- 设置页 -->
+<div id="me" class="page">
+  <div class="card">
+    <h3>👧 学习记录</h3>
+    <p>你的星星会一直保存哦 ⭐</p>
+    <button onclick="reset()">重置星星</button>
+  </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="nav">
+  <div onclick="show('home')">🏠 学习</div>
+  <div onclick="show('game')">🎮 游戏</div>
+  <div onclick="show('me')">👤 我的</div>
+</div>
+
+<script>
+let score = localStorage.getItem("score") || 0;
+document.getElementById("score").innerText = score;
+
+// 发音
+function speak(word){
+  let msg = new SpeechSynthesisUtterance(word);
+  msg.lang = "zh-CN";
+  speechSynthesis.speak(msg);
+}
+
+// 答题
+function answer(correct){
+  if(correct){
+    alert("✔️ 答对了！");
+    score++;
+    localStorage.setItem("score", score);
+    document.getElementById("score").innerText = score;
+  }else{
+    alert("❌ 再试试！");
+  }
+}
+
+// 切换页面（App感觉核心）
+function show(page){
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+}
+
+// 重置
+function reset(){
+  score = 0;
+  localStorage.setItem("score", score);
+  document.getElementById("score").innerText = score;
+  alert("已重置 ⭐");
+}
+</script>
 
 </body>
 </html>
