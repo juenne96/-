@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>字字乐园｜笔顺练习</title>
+<title>字字乐园 App</title>
 
 <style>
 body{
@@ -12,6 +12,7 @@ body{
   background:#f5f7ff;
 }
 
+/* 顶部 */
 header{
   background:linear-gradient(135deg,#ffcc66,#ff9966);
   color:white;
@@ -21,118 +22,234 @@ header{
   font-weight:bold;
 }
 
+/* 星星 */
 #info{
   text-align:center;
-  margin:10px;
+  margin:8px;
   font-size:16px;
 }
 
+/* 页面 */
+.page{
+  display:none;
+  padding:15px;
+}
+
+.active{
+  display:block;
+}
+
+/* 卡片 */
 .card{
   background:white;
-  margin:15px;
-  padding:25px;
+  padding:20px;
   border-radius:20px;
   box-shadow:0 5px 15px rgba(0,0,0,0.1);
   text-align:center;
+  margin-bottom:15px;
 }
 
-/* 汉字显示 */
-.char{
-  font-size:120px;
-  margin:20px;
-  color:#333;
-  position:relative;
-}
-
-/* 笔画动画层 */
-.stroke{
-  position:absolute;
+/* 底部导航 */
+.nav{
+  position:fixed;
+  bottom:0;
   width:100%;
-  height:100%;
-  top:0;
-  left:0;
-  font-size:120px;
-  color:rgba(255,153,102,0.3);
-  animation:write 2s linear forwards;
+  display:flex;
+  background:white;
+  border-top:1px solid #ddd;
 }
 
-/* 写字动画 */
-@keyframes write{
-  0%{clip-path: inset(0 100% 0 0);}
-  100%{clip-path: inset(0 0 0 0);}
+.nav div{
+  flex:1;
+  padding:12px;
+  text-align:center;
+  font-size:14px;
+  cursor:pointer;
+}
+
+/* 汉字 */
+.word{
+  font-size:50px;
+  margin:10px;
 }
 
 /* 按钮 */
 button{
-  padding:12px 18px;
-  margin:8px;
+  padding:10px 15px;
+  margin:5px;
   border:none;
-  border-radius:12px;
+  border-radius:10px;
   background:#ff9966;
   color:white;
-  font-size:16px;
-  cursor:pointer;
+}
+
+/* 图片 */
+img{
+  width:160px;
+  height:160px;
+  border-radius:15px;
+  object-fit:cover;
+}
+
+/* 笔顺动画（简化） */
+.stroke{
+  font-size:80px;
+  opacity:0.2;
+  animation:write 2s linear forwards;
+}
+
+@keyframes write{
+  0%{clip-path: inset(0 100% 0 0);}
+  100%{clip-path: inset(0 0 0 0);}
 }
 </style>
 </head>
 
 <body>
 
-<header>✍️ 笔顺练习系统</header>
+<header>🌈 字字乐园 App</header>
 
 <div id="info">
-📚 当前汉字：<span id="name">猫</span>
+⭐ 星星：<span id="score">0</span>
 </div>
 
-<div class="card">
-
-  <div class="char">
-    <div id="stroke" class="stroke">猫</div>
-    <div id="char">猫</div>
+<!-- 🏠 识字 -->
+<div id="home" class="page active">
+  <div class="card">
+    <h3>📚 识字学习</h3>
+    <div class="word" onclick="speak('猫')">猫</div>
+    <div class="word" onclick="speak('狗')">狗</div>
+    <div class="word" onclick="speak('鸟')">鸟</div>
   </div>
+</div>
 
-  <button onclick="play()">▶ 播放写字动画</button>
-  <button onclick="next()">下一个字 ➜</button>
+<!-- 🔊 听音选词 -->
+<div id="listen" class="page">
+  <div class="card">
+    <h3>🔊 听音选词</h3>
+    <button onclick="play('猫')">播放</button>
+    <div id="listenOptions"></div>
+  </div>
+</div>
 
+<!-- 🖼 看图选词 -->
+<div id="image" class="page">
+  <div class="card">
+    <h3>🖼 看图选词</h3>
+    <img id="img" src="">
+    <div id="imgOptions"></div>
+  </div>
+</div>
+
+<!-- ✍️ 笔顺 -->
+<div id="stroke" class="page">
+  <div class="card">
+    <h3>✍️ 笔顺练习</h3>
+    <div class="stroke" id="char">猫</div>
+    <button onclick="nextChar()">下一个</button>
+  </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="nav">
+  <div onclick="show('home')">📚</div>
+  <div onclick="show('listen')">🔊</div>
+  <div onclick="show('image')">🖼</div>
+  <div onclick="show('stroke')">✍️</div>
 </div>
 
 <script>
 
-const chars = ["猫","狗","鸟","人","大","小","中"];
+let score = localStorage.getItem("score") || 0;
+document.getElementById("score").innerText = score;
 
-let index = 0;
-
-/* 初始化 */
-function load(){
-  document.getElementById("char").innerText = chars[index];
-  document.getElementById("stroke").innerText = chars[index];
-  document.getElementById("name").innerText = chars[index];
+/* 页面切换 */
+function show(p){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  document.getElementById(p).classList.add("active");
 }
 
-/* 🔊 语音 */
-function play(){
-  let msg = new SpeechSynthesisUtterance("写" + chars[index]);
-  msg.lang = "zh-CN";
+/* 🔊 朗读 */
+function speak(word){
+  let msg = new SpeechSynthesisUtterance(word);
+  msg.lang="zh-CN";
+  speechSynthesis.speak(msg);
+}
+
+/* 听音选词 */
+const listenData = [
+  {w:"猫", opts:["猫","狗","鸟","牛"]},
+  {w:"狗", opts:["狗","兔","羊","马"]}
+];
+
+let li=0;
+
+function play(w){
+  let msg = new SpeechSynthesisUtterance(w);
+  msg.lang="zh-CN";
   speechSynthesis.speak(msg);
 
-  // 重新触发动画
-  let el = document.getElementById("stroke");
-  el.style.animation = "none";
-  void el.offsetWidth; 
-  el.style.animation = "write 2s linear forwards";
+  let q = listenData[li];
+  let html="";
+  q.opts.forEach(o=>{
+    html+=`<button onclick="checkListen('${o}')">${o}</button>`;
+  });
+  document.getElementById("listenOptions").innerHTML=html;
 }
 
-/* 下一个字 */
-function next(){
-  index++;
-  if(index >= chars.length){
-    index = 0;
-    alert("🎉 完成一轮练习！");
+function checkListen(a){
+  if(a===listenData[li].w){
+    addScore();
+    li++;
+    if(li>=listenData.length) li=0;
+    alert("✔️ 正确");
+  }else alert("❌");
+}
+
+/* 看图选词 */
+const imgData=[
+  {
+    img:"https://images.unsplash.com/photo-1518791841217-8f162f1e1131?w=300",
+    ans:"猫",
+    opts:["猫","狗","鸟"]
   }
-  load();
+];
+
+function loadImg(){
+  let q=imgData[0];
+  document.getElementById("img").src=q.img;
+
+  let html="";
+  q.opts.forEach(o=>{
+    html+=`<button onclick="checkImg('${o}')">${o}</button>`;
+  });
+  document.getElementById("imgOptions").innerHTML=html;
+}
+loadImg();
+
+function checkImg(a){
+  if(a===imgData[0].ans){
+    addScore();
+    alert("✔️ 正确");
+  }else alert("❌");
 }
 
-load();
+/* 笔顺 */
+let chars=["猫","狗","鸟","人"];
+let ci=0;
+
+function nextChar(){
+  ci++;
+  if(ci>=chars.length) ci=0;
+  document.getElementById("char").innerText=chars[ci];
+}
+
+/* 加分 */
+function addScore(){
+  score++;
+  localStorage.setItem("score",score);
+  document.getElementById("score").innerText=score;
+}
 
 </script>
 
