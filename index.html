@@ -1,150 +1,50 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌈字字乐园 PRO</title>
 
-<title>🌈字字乐园 PRO</title>
+  <link rel="stylesheet" href="style.css" />
 
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
-
+  <script defer src="app.js"></script>
 </head>
+
 <body>
+  <header class="top-bar">
+    <h1>🌈 字字乐园 PRO</h1>
+    <p>快乐学习汉字 · 游戏化练习平台</p>
+  </header>
 
-<header>
-🌈 字字乐园 PRO
-</header>
+  <main class="container">
 
-<div class="scoreBox">
-⭐ 星星：
-<span id="score">0</span>
-</div>
+    <!-- 功能区 -->
+    <section class="card">
+      <h2>📚 学习模式</h2>
+      <button onclick="startLearn()">开始学习</button>
+    </section>
 
-<!-- 首页 -->
-<div class="page active" id="home">
+    <section class="card">
+      <h2>🎮 游戏模式</h2>
+      <button onclick="startGame()">开始游戏</button>
+    </section>
 
-<div class="card">
-<h2>📚 学习汉字</h2>
-<button onclick="openLearn()">
-进入学习
-</button>
-</div>
+    <section class="card">
+      <h2>🧠 测试模式</h2>
+      <button onclick="startTest()">开始测试</button>
+    </section>
 
-<div class="card">
-<h2>🎮 趣味游戏</h2>
+    <!-- 显示区 -->
+    <section class="panel">
+      <h2>📌 当前内容</h2>
+      <div id="output">请选择一个模式开始</div>
+    </section>
 
-<button onclick="show('game1')">
-看图选词
-</button>
+  </main>
 
-<button onclick="show('game2')">
-听读选词
-</button>
-
-</div>
-
-</div>
-
-<!-- 学习 -->
-<div class="page" id="learn"><button onclick="goHome()">
-🏠 返回首页
-</button>
-
-<div class="card">
-
-<div class="word" id="char"></div>
-
-<div class="pinyin" id="pinyin"></div>
-
-<img id="img">
-
-<div class="wordText" id="wordText"></div>
-
-<div>
-
-<button onclick="fandou()">
-📢 范读
-</button>
-
-<button onclick="langdu()">
-🔊 朗读
-</button>
-
-<button onclick="gendu()">
-👂 跟读
-</button>
-
-</div>
-
-<button onclick="nextWord()">
-下一个
-</button>
-
-</div>
-
-<div class="card">
-
-<h2>
-✍️ 笔顺练习
-</h2>
-
-<div id="stroke"></div>
-
-<button onclick="writeAnim()">
-▶ 播放笔顺
-</button>
-
-<button onclick="practiceWrite()">
-✏️ 跟着写
-</button>
-
-</div>
-
-</div>
-
-<!-- 看图选词 -->
-<div class="page" id="game1"><button onclick="goHome()">
-🏠 返回首页
-</button>
-
-<div class="card">
-
-<h2>
-🖼 看图选词
-</h2>
-
-<img id="gimg">
-
-<div id="gopt"></div>
-
-</div>
-
-</div>
-
-<!-- 听读选词 -->
-<div class="page" id="game2"><button onclick="goHome()">
-🏠 返回首页
-</button>
-
-<div class="card">
-
-<h2>
-🔊 听读选词
-</h2>
-
-<button onclick="playAudio()">
-播放
-</button>
-
-<div id="aopt"></div>
-
-</div>
-
-</div>
-
-<script src="script.js"></script>
+  <footer class="footer">
+    <p>© 2026 字字乐园 PRO</p>
+  </footer>
 
 </body>
 </html>
