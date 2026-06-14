@@ -50,7 +50,9 @@ function show(page) {
 
 // 打开学习页面
 function openLearn() {
-    show("learn");
+    show("learn");function goHome() {
+    show("home");
+}
     loadLearn();
 }
 
