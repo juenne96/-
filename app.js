@@ -13,10 +13,17 @@ const words = [
   "心 ❤️"
 ];
 
-// ⭐ 分数系统
 let score = 0;
 
-// 🎵 音效（用浏览器内置音效）
+// 🔊 语音朗读
+function speak(text) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "zh-CN";
+  utterance.rate = 0.9;
+  speechSynthesis.speak(utterance);
+}
+
+// 🎵 音效
 function playSound(type) {
   const audio = new Audio();
 
@@ -29,49 +36,47 @@ function playSound(type) {
   audio.play();
 }
 
-// ✨ 动画提示
-function animateResult(text, color) {
-  output.innerHTML = `
-    <div style="
-      font-size:28px;
-      padding:20px;
-      color:${color};
-      animation: pop 0.4s ease;
-    ">
-      ${text}
-    </div>
-    <button onclick="startTest()">继续</button>
-  `;
-}
-
-// 学习模式
+// 📚 学习模式
 function startLearn() {
   output.innerHTML = `
     <h3>📚 学习模式</h3>
-    <p>认识这些汉字：</p>
-    <div style="font-size:24px; line-height:2;">
-      ${words.join(" ")}
-    </div>
-    <p>⭐ 当前分数：${score}</p>
-  `;
-}
+    <p>点击朗读汉字：</p>
 
-// 游戏模式
-function startGame() {
-  const random = words[Math.floor(Math.random() * words.length)];
+    ${words.map(w => `
+      <div style="margin:8px 0; font-size:20px;">
+        ${w}
+        <button onclick="speak('${w.split(' ')[0]}')">🔊 朗读</button>
+      </div>
+    `).join("")}
 
-  output.innerHTML = `
-    <h3>🎮 游戏模式</h3>
-    <p>记住这个字：</p>
-    <div style="font-size:40px; margin:10px 0; animation: pop 0.4s;">
-      ${random}
-    </div>
-    <button onclick="startGame()">下一个</button>
     <p>⭐ 分数：${score}</p>
   `;
 }
 
-// 测试模式
+// 🎮 游戏模式（自动范读）
+function startGame() {
+  const random = words[Math.floor(Math.random() * words.length)];
+  const char = random.split(" ")[0];
+
+  speak(char);
+
+  output.innerHTML = `
+    <h3>🎮 游戏模式</h3>
+
+    <p>听这个字：</p>
+
+    <div style="font-size:40px; animation: pop 0.4s;">
+      ${random}
+    </div>
+
+    <button onclick="speak('${char}')">🔊 再听一次</button>
+    <button onclick="startGame()">下一个</button>
+
+    <p>⭐ 分数：${score}</p>
+  `;
+}
+
+// 🧠 测试模式
 function startTest() {
   const answerIndex = Math.floor(Math.random() * words.length);
   const correct = words[answerIndex];
@@ -87,33 +92,36 @@ function startTest() {
     options[Math.floor(Math.random() * 3)] = correct;
   }
 
+  const char = correct.split(" ")[0];
+
   output.innerHTML = `
     <h3>🧠 测试模式</h3>
-    <p>请选择正确的字：</p>
 
-    <div style="font-size:40px; margin:10px 0; animation: pop 0.4s;">
-      ${correct.split(" ")[0]}
+    <div style="font-size:40px; animation: pop 0.4s;">
+      ${char}
     </div>
+
+    <button onclick="speak('${char}')">🔊 听发音</button>
 
     ${options.map(opt => `
       <button onclick="checkAnswer('${opt}', '${correct}')">
         ${opt}
       </button>
-    `).join("<br><br>")}
+    `).join("<br>")}
 
     <p>⭐ 分数：${score}</p>
   `;
 }
 
-// 答案检查（升级）
+// ✅ 答案检查
 function checkAnswer(selected, correct) {
   if (selected === correct) {
     score += 10;
     playSound("correct");
-    animateResult("✅ 正确 +10分！", "green");
+    output.innerHTML = `<h3>✅ 正确 +10分</h3><button onclick="startTest()">继续</button>`;
   } else {
     score -= 5;
     playSound("wrong");
-    animateResult("❌ 错误 -5分", "red");
+    output.innerHTML = `<h3>❌ 错误 -5分</h3><button onclick="startTest()">重试</button>`;
   }
 }
