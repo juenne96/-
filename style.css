@@ -1,145 +1,57 @@
-body{
-margin:0;
-font-family:Arial;
-background:#fff8ee;
-padding-bottom:80px;
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background: linear-gradient(120deg, #f6d365, #fda085);
+  color: #333;
 }
 
-header{
-background:linear-gradient(135deg,#ffb6c1,#ffd580);
-padding:20px;
-text-align:center;
-font-size:28px;
-font-weight:bold;
-color:white;
+.top-bar {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.3);
 }
 
-.scoreBox{
-text-align:center;
-padding:10px;
-font-size:18px;
+.container {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
-.page{
-display:none;
-padding:15px;
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-.active{
-display:block;
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #ff6b6b;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.card{
-background:white;
-padding:20px;
-margin-top:15px;
-border-radius:25px;
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-text-align:center;
+button:hover {
+  background: #ff4757;
 }
 
-button{
-border:none;
-background:#ff9f80;
-color:white;
-padding:12px 18px;
-margin:6px;
-border-radius:18px;
-font-size:16px;
-cursor:pointer;
+.panel {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  min-height: 120px;
 }
 
-button:hover{
-background:#ff7f50;
-}
-
-.word{
-font-size:70px;
-font-weight:bold;
-color:#333;
-margin-top:10px;
-}
-
-.pinyin{
-font-size:28px;
-color:#ff6699;
-font-weight:bold;
-margin-bottom:10px;
-}
-
-.wordText{
-font-size:24px;
-color:#666;
-margin-top:10px;
-}
-
-img{
-width:150px;
-height:150px;
-object-fit:cover;
-border-radius:20px;
-margin-top:15px;
-}
-
-#stroke{
-width:220px;
-height:220px;
-margin:auto;
-background:white;
-border-radius:20px;
-border:3px solid #ffd580;
-}
-
-#gimg{
-width:180px;
-height:180px;
-}
-
-#gopt button{
-display:block;
-width:180px;
-margin:10px auto;
-}
-
-#aopt button{
-display:block;
-width:180px;
-margin:10px auto;
-}
-
-.nav{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-background:white;
-border-top:1px solid #eee;
-}
-
-.nav div{
-flex:1;
-padding:10px;
-text-align:center;
-}
-
-@media(max-width:600px){
-
-.word{
-font-size:55px;
-}
-
-.pinyin{
-font-size:22px;
-}
-
-img{
-width:120px;
-height:120px;
-}
-
-#stroke{
-width:180px;
-height:180px;
-}
-
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  opacity: 0.7;
 }
