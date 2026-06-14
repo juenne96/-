@@ -1,83 +1,94 @@
-const data=[
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-{
-w:"猫",
-p:"māo",
-word:"小猫",
-img:"https://cdn-icons-png.flaticon.com/512/616/616430.png"
-},
+<title>🌈字字乐园 PRO</title>
 
-{
-w:"狗",
-p:"gǒu",
-word:"小狗",
-img:"https://cdn-icons-png.flaticon.com/512/616/616408.png"
-},
+<link rel="stylesheet" href="style.css">
 
-{
-w:"鱼",
-p:"yú",
-word:"金鱼",
-img:"https://cdn-icons-png.flaticon.com/512/616/616547.png"
-},
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
 
-{
-w:"鸟",
-p:"niǎo",
-word:"小鸟",
-img:"https://cdn-icons-png.flaticon.com/512/3069/3069172.png"
-},
+</head>
+<body>
 
-{
-w:"牛",
-p:"niú",
-word:"奶牛",
-img:"https://cdn-icons-png.flaticon.com/512/1998/1998610.png"
-}
+<header>
+🌈 字字乐园 PRO
+</header>
 
-];<div class="word" id="char"></div>
-
-<div
-id="pinyin"
-style="
-font-size:28px;
-color:#ff6699;
-font-weight:bold;
-margin-bottom:10px;
-">
+<div class="scoreBox">
+⭐ 星星：
+<span id="score">0</span>
 </div>
+
+<!-- 首页 -->
+<div class="page active" id="home">
+
+<div class="card">
+<h2>📚 学习汉字</h2>
+<button onclick="openLearn()">
+进入学习
+</button>
+</div>
+
+<div class="card">
+<h2>🎮 趣味游戏</h2>
+
+<button onclick="show('game1')">
+看图选词
+</button>
+
+<button onclick="show('game2')">
+听读选词
+</button>
+
+</div>
+
+</div>
+
+<!-- 学习 -->
+<div class="page" id="learn">
+
+<div class="card">
+
+<div class="word" id="char"></div>
+
+<div class="pinyin" id="pinyin"></div>
 
 <img id="img">
 
-<div
-id="wordText"
-style="
-font-size:22px;
-margin-top:10px;
-color:#666;
-">
-</div>function loadLearn(){
+<div class="wordText" id="wordText"></div>
 
-document.getElementById("char").innerText=
-data[i].w;
+<div>
 
-document.getElementById("pinyin").innerText=
-data[i].p;
+<button onclick="fandou()">
+📢 范读
+</button>
 
-document.getElementById("wordText").innerText=
-data[i].word;
+<button onclick="langdu()">
+🔊 朗读
+</button>
 
-document.getElementById("img").src=
-data[i].img;
+<button onclick="gendu()">
+👂 跟读
+</button>
 
-}<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script></head><div
-id="stroke"
-style="
-width:220px;
-height:220px;
-margin:auto;
-">
 </div>
+
+<button onclick="nextWord()">
+下一个
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>
+✍️ 笔顺练习
+</h2>
+
+<div id="stroke"></div>
 
 <button onclick="writeAnim()">
 ▶ 播放笔顺
@@ -85,54 +96,49 @@ margin:auto;
 
 <button onclick="practiceWrite()">
 ✏️ 跟着写
-</button>let writer;
+</button>
 
-function writeAnim(){
+</div>
 
-document.getElementById("stroke").innerHTML="";
+</div>
 
-writer=HanziWriter.create(
-'stroke',
-data[i].w,
-{
-width:220,
-height:220,
+<!-- 看图选词 -->
+<div class="page" id="game1">
 
-padding:5,
+<div class="card">
 
-showOutline:true,
+<h2>
+🖼 看图选词
+</h2>
 
-showCharacter:false,
+<img id="gimg">
 
-strokeColor:"#ff6666",
+<div id="gopt"></div>
 
-outlineColor:"#cccccc",
+</div>
 
-delayBetweenStrokes:500,
+</div>
 
-strokeAnimationSpeed:1
-});
+<!-- 听读选词 -->
+<div class="page" id="game2">
 
-writer.animateCharacter();
+<div class="card">
 
-}function practiceWrite(){
+<h2>
+🔊 听读选词
+</h2>
 
-document.getElementById("stroke").innerHTML="";
+<button onclick="playAudio()">
+播放
+</button>
 
-writer=HanziWriter.create(
-'stroke',
-data[i].w,
-{
-width:220,
-height:220,
+<div id="aopt"></div>
 
-showOutline:true,
+</div>
 
-showCharacter:false,
+</div>
 
-strokeColor:"#ff6666"
-});
+<script src="script.js"></script>
 
-writer.quiz();
-
-}
+</body>
+</html>
